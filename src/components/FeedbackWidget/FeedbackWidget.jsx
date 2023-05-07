@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
+import css from './FeedbackWidget.module.css';
 
+import { FeedbackOptions } from '../FeedbackOptions/FeedbackOptions';
+
+import { Statistics } from '../Statistics/Statistics';
 const INITIAL_STATE = {
   good: 0,
   neutral: 0,
@@ -11,25 +15,11 @@ export class FeedbackWidget extends Component {
     ...INITIAL_STATE,
   };
 
-  clickGoodHandle = () => {
-    // const name = e.currentTarget.name;
+  clickHandle = e => {
+    const name = e.currentTarget.name;
 
     this.setState(prevState => ({
-      good: prevState.good + 1,
-    }));
-  };
-
-  clickNeutralHandle = () => {
-    // const name = e.currentTarget.name;
-    this.setState(prevState => ({
-      neutral: prevState.neutral + 1,
-    }));
-  };
-
-  clickBadHandle = () => {
-    // const name = e.currentTarget.name;
-    this.setState(prevState => ({
-      bad: prevState.bad + 1,
+      [name]: prevState[name] + 1,
     }));
   };
 
@@ -43,51 +33,22 @@ export class FeedbackWidget extends Component {
     const positiveTotal = Math.round((good / total) * 100);
     return positiveTotal;
   };
+
   render() {
     return (
-      <>
-        <ul className="controlButtons">
-          <li className="controlButton">
-            <button type="button" name="good" onClick={this.clickGoodHandle}>
-              Good
-            </button>
-          </li>
-          <li className="controlButton">
-            <button
-              type="button"
-              name="neutral"
-              onClick={this.clickNeutralHandle}
-            >
-              Neutral
-            </button>
-          </li>
-          <li className="controlButton">
-            <button type="button" name="bad" onClick={this.clickBadHandle}>
-              Bad
-            </button>
-          </li>
-        </ul>
-        <>
-          <h2 className="statisticsTitle">Statistics:</h2>
-        </>
-        {JSON.stringify(this.state) === JSON.stringify(INITIAL_STATE) && (
-          <p className="notification">There is no feedback</p>
-        )}
+      <div className={css.widget}>
+        <FeedbackOptions clickHandle={this.clickHandle} />
 
-        {JSON.stringify(this.state) !== JSON.stringify(INITIAL_STATE) && (
-          <ul className="statistics">
-            <li className="statisticsItem">Good: {this.state.good}</li>
-            <li className="statisticsItem">Neutral:{this.state.neutral}</li>
-            <li className="statisticsItem">Bad:{this.state.bad}</li>
-            <li className="statisticsItem">
-              Total:{this.countTotalFeedback()}
-            </li>
-            <li className="statisticsItem">
-              Positive feedback: {this.countPositiveFeedbackPercentage()} %
-            </li>
-          </ul>
-        )}
-      </>
+        <Statistics
+          good={this.state.good}
+          neutral={this.state.neutral}
+          bad={this.state.bad}
+          total={this.countTotalFeedback()}
+          positivePercentage={this.countPositiveFeedbackPercentage()}
+          state={this.state}
+          initialState={INITIAL_STATE}
+        />
+      </div>
     );
   }
 }
