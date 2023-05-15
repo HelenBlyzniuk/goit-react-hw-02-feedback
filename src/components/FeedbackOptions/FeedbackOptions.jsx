@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { nanoid } from 'nanoid';
 
 import css from './FeedbackOptions.module.css';
 
@@ -12,11 +11,11 @@ export class FeedbackOptions extends Component {
     return (
       <ul className={css.control_buttons}>
         {options.map(btn => (
-          <li className={css.control_button} key={nanoid()}>
+          <li className={css.control_button} key={btn}>
             <button
               className={css.control_btn}
               type="button"
-              name="good"
+              name={btn}
               onClick={clickHandle}
             >
               {btn}
@@ -30,4 +29,5 @@ export class FeedbackOptions extends Component {
 
 FeedbackOptions.propTypes = {
   clickHandle: PropTypes.func.isRequired,
+  options: PropTypes.arrayOf(PropTypes.string.isRequired),
 };
